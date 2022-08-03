@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext 'Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename="C:\Users\User\Documents\WebAPI\Clapp Full Layers\DB\CleanApp.mdf";Integrated Security=True;Connect Timeout=30' Microsoft.EntityFrameworkCore.SqlServer -Context ClappContext -OutputDir Models -Force
