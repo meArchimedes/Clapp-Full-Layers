@@ -1,15 +1,13 @@
-﻿using Repositories.Models;
+﻿using DAL_Repositories.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Common
 {
     public class HousekeeperViewModel : UserViewModel
     {
-        public int UserId { get; set; }
-        public int? PaymentMethodId { get; set; }
         public int Id { get; set; }
 
-        public virtual PaymentMethod? PaymentMethod { get; set; }
-        public virtual User User { get; set; } = null!;
+        public virtual User IdNavigation { get; set; } = null!;
 
     }
 }

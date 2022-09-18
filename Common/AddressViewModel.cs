@@ -1,4 +1,5 @@
-﻿using Repositories.Models;
+﻿
+using DAL_Repositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,7 @@ namespace Common
         public string? AddressLine2 { get; set; }
         public string Zip { get; set; } = null!;
         public string? State { get; set; }
-        public int UserId { get; set; }
 
-        public virtual User User { get; set; } = null!;
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<AddressUser> AddressUsers { get; set; }
     }
 }

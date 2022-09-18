@@ -3,26 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Repositories.Models;
+using DAL_Repositories.Models;
 
 namespace Common
 {
     public class UserViewModel
     {
-        public UserViewModel()
-        {
-            Addresses = new HashSet<Address>();
-            Housekeepers = new HashSet<Housekeeper>();
-        }
-
-        public int Id { get; set; }
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
-        public int AddressId { get; set; }
+        public int UserId { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public string? Email { get; set; }
+        public bool? Status { get; set; }
+        public string? Gender { get; set; }
+        public string? Phone { get; set; }
+        public int? PaymentId { get; set; }
 
-        public virtual Address Address { get; set; } = null!;
-        public virtual ICollection<Address> Addresses { get; set; }
-        public virtual ICollection<Housekeeper> Housekeepers { get; set; }
     }
 }
