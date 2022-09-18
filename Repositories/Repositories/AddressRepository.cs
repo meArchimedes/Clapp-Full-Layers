@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DAL_Repositories.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Repositories.Models;
 
 namespace DAL_Repositories.Repositories
 {
@@ -19,18 +19,41 @@ namespace DAL_Repositories.Repositories
         {
             context.Addresses.Add(objToCreate);
         }
-
-        public bool Delete(int id)
+        public async Task CreateAsync(Address address)
         {
             try
             {
-                context.Remove(context.Addresses.Where(a => a.AddressId == id));
+                context.Addresses.Add(address);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public bool Delete(int permissionCode, int id)
+        {
+            if (permissionCode == 1)
+            {
+                try
+                {
+                    context.Remove(context.Addresses.Where(a => a.AddressId == id));
+                }
+                catch
+                {
+                    return false;
+                }
                 return true;
             }
-            catch
+            else
             {
-                return false;
+                throw new AccessViolationException();
             }
+        }
+
+        public bool DeleteAll(Address typeToDelete)
+        {
+           throw new Exception();
         }
 
         public List<Address> GetAll()
@@ -43,10 +66,34 @@ namespace DAL_Repositories.Repositories
             return (Address)context.Addresses.Where(c => c.AddressId == id);
         }
 
-        public void Update(Address objToUpdate)
+        public void Update(int userPermissionCode, Address objToUpdate)
         {
-            context.Remove(context.Addresses.Where(h => h.AddressId == objToUpdate.AddressId));
-            context.Addresses.Add(objToUpdate);
+            if (userPermissionCode == 1)
+            {
+                try
+                {
+                    var a = context.Addresses.Where(a => a.AddressId == objToUpdate.AddressId).FirstOrDefault();
+                    if (a != null)
+                    {   
+                        a.Country = objToUpdate.Country;
+                        a.City = objToUpdate.City;
+                        a.State = objToUpdate.State;
+                        a.AddressLine1 = objToUpdate.AddressLine1;
+                        a.AddressLine2 = objToUpdate.AddressLine2;
+                        a.Zip = objToUpdate.Zip;
+                        a.AddressId = objToUpdate.AddressId;
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Access Permission needed for this action!");
+                throw new AccessViolationException();
+            }
         }
     }
 }

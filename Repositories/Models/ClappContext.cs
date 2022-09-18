@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Repositories.Models
+namespace DAL_Repositories.Models
 {
     public partial class ClappContext : DbContext
     {
@@ -17,6 +17,7 @@ namespace Repositories.Models
         }
 
         public virtual DbSet<Address> Addresses { get; set; } = null!;
+        public virtual DbSet<AddressUser> AddressUsers { get; set; } = null!;
         public virtual DbSet<CheckingAccount> CheckingAccounts { get; set; } = null!;
         public virtual DbSet<Cleaner> Cleaners { get; set; } = null!;
         public virtual DbSet<CleanerBankDetail> CleanerBankDetails { get; set; } = null!;
@@ -42,8 +43,6 @@ namespace Repositories.Models
             {
                 entity.ToTable("Address");
 
-                entity.Property(e => e.AddressId).ValueGeneratedNever();
-
                 entity.Property(e => e.AddressLine1)
                     .HasMaxLength(50)
                     .HasColumnName("Address line 1");
@@ -61,50 +60,61 @@ namespace Repositories.Models
                 entity.Property(e => e.Zip)
                     .HasMaxLength(50)
                     .HasColumnName("zip");
+            });
+
+            modelBuilder.Entity<AddressUser>(entity =>
+            {
+                entity.HasOne(d => d.Address)
+                    .WithMany(p => p.AddressUsers)
+                    .HasForeignKey(d => d.AddressId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__AddressUs__Addre__7720AD13");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.Addresses)
+                    .WithMany(p => p.AddressUsers)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Address__UserCod__10566F31");
+                    .HasConstraintName("FK__AddressUs__UserI__74444068");
             });
 
             modelBuilder.Entity<CheckingAccount>(entity =>
             {
                 entity.ToTable("Checking Account");
-
-                entity.Property(e => e.CheckingAccountId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Cleaner>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Price).HasColumnType("money");
 
-                entity.HasOne(d => d.BankDetails)
-                    .WithMany(p => p.Cleaners)
-                    .HasForeignKey(d => d.BankDetailsId)
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Cleaner)
+                    .HasForeignKey<Cleaner>(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Cleaners__BankDe__395884C4");
+                    .HasConstraintName("FK_Cleaners_Users");
             });
 
             modelBuilder.Entity<CleanerBankDetail>(entity =>
             {
                 entity.HasKey(e => e.BankDetailsId);
 
-                entity.Property(e => e.BankDetailsId).ValueGeneratedNever();
+                entity.Property(e => e.BankDetailsId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.AccountName).HasMaxLength(50);
 
                 entity.Property(e => e.Bank).HasMaxLength(50);
+
+                entity.HasOne(d => d.BankDetails)
+                    .WithOne(p => p.CleanerBankDetail)
+                    .HasForeignKey<CleanerBankDetail>(d => d.BankDetailsId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CleanerBankDetails_Cleaners");
             });
 
             modelBuilder.Entity<CreditCard>(entity =>
             {
                 entity.ToTable("CreditCard");
-
-                entity.Property(e => e.CreditCardId).ValueGeneratedNever();
 
                 entity.Property(e => e.CardHolder).HasMaxLength(30);
 
@@ -121,43 +131,32 @@ namespace Repositories.Models
             modelBuilder.Entity<GooglePay>(entity =>
             {
                 entity.ToTable("Google Pay");
-
-                entity.Property(e => e.GooglePayId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Housekeeper>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-                entity.HasOne(d => d.PaymentMethod)
-                    .WithMany(p => p.Housekeepers)
-                    .HasForeignKey(d => d.PaymentMethodId)
-                    .HasConstraintName("FK__Housekeep__Payme__37703C52");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Housekeepers)
-                    .HasForeignKey(d => d.UserId)
+                entity.HasOne(d => d.IdNavigation)
+                    .WithOne(p => p.Housekeeper)
+                    .HasForeignKey<Housekeeper>(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Housekeep__UserC__123EB7A3");
+                    .HasConstraintName("FK_Housekeepers_Users");
             });
 
             modelBuilder.Entity<PayPal>(entity =>
             {
                 entity.ToTable("PayPal");
-
-                entity.Property(e => e.PayPalId).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<PaymentMethod>(entity =>
             {
                 entity.ToTable("Payment Methods");
 
-                entity.Property(e => e.PaymentMethodId).ValueGeneratedNever();
-
                 entity.HasOne(d => d.CreditCard)
                     .WithMany(p => p.PaymentMethods)
                     .HasForeignKey(d => d.CreditCardId)
-                    .HasConstraintName("FK__Payment M__Credi__1BC821DD");
+                    .HasConstraintName("FK__Payment M__Credi__2EDAF651");
 
                 entity.HasOne(d => d.GooglePay)
                     .WithMany(p => p.PaymentMethods)
@@ -172,21 +171,24 @@ namespace Repositories.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Email)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FirstName).HasMaxLength(20);
 
+                entity.Property(e => e.Gender).HasMaxLength(7);
+
                 entity.Property(e => e.LastName).HasMaxLength(20);
 
-                entity.HasOne(d => d.Address)
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(15)
+                    .IsFixedLength();
+
+                entity.HasOne(d => d.Payment)
                     .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.AddressId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Users__AddressId__0F624AF8");
+                    .HasForeignKey(d => d.PaymentId)
+                    .HasConstraintName("FK__Users__PaymentId__6AEFE058");
             });
 
             OnModelCreatingPartial(modelBuilder);

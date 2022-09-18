@@ -1,5 +1,5 @@
 ﻿using Common;
-using Repositories.Models;
+using DAL_Repositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,10 @@ namespace App_Services.Services
     public interface IUserService
     {
         List<UserViewModel> GetList();
-        User GetById(int id);
+        UserViewModel GetById(int id);
 
-        bool Delete(User user);
-        void Create(User user);
-        void Update(User user);
+        bool Delete(int AccessPermission, int id);
+        void Create(UserViewModel user);
+        void Update(int AccessPermission, UserViewModel user);
     }
 }

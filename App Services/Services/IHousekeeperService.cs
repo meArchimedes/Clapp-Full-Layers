@@ -1,5 +1,5 @@
 ﻿using Common;
-using Repositories.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,10 @@ namespace App_Services.Services
     public interface IHousekeeperService
     {
         List<HousekeeperViewModel> GetList();
-        Housekeeper GetById(int id);
+        HousekeeperViewModel GetById(int id);
 
-        bool Delete(Housekeeper housekeeper);
-        void Create(Housekeeper housekeeper);
-        void Update(Housekeeper housekeeper);
+        bool Delete(int permissionCode, int housekeeperId);
+        void Create(HousekeeperViewModel housekeeper);
+        void Update(int permissionCode, HousekeeperViewModel housekeeper);
     }
 }

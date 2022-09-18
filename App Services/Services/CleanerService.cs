@@ -1,20 +1,20 @@
 ﻿using Common;
 using AutoMapper;
 using Repositories;
-using Repositories.Models;
+
 using System.Collections.Generic;
+using DAL_Repositories.Models;
 
 namespace App_Services.Services
 {
-    //***
     public class CleanerService : ICleanerService
     {
         ICleanerRepository repo;
         IMapper mapper;
-        public CleanerService(ICleanerRepository repo)
+        public CleanerService(ICleanerRepository repo, IMapper mapper)
         {
             this.repo = repo;
-            mapper = mapper;
+            this.mapper = mapper;
         }
         public List<CleanerViewModel> GetList()
         {
@@ -22,21 +22,25 @@ namespace App_Services.Services
             List<CleanerViewModel> CleanerVM = mapper.Map<List<CleanerViewModel>>(cleaners);
             return CleanerVM;
         }
-        public Cleaner GetById(int id)
+        public CleanerViewModel GetById(int id)
         {
-            return repo.GetById(id);
+            Cleaner cleaner = repo.GetById(id);
+            CleanerViewModel cleanerViewModel = mapper.Map<CleanerViewModel>(cleaner);
+            return cleanerViewModel;
         }
-        public bool Delete(Cleaner cleaner)
+        public bool Delete(int permissionCode, int cleanerId)
         {
-            return repo.Delete(cleaner.Id);
+            return repo.Delete(permissionCode, cleanerId);
         }
-        public void Create(Cleaner cleaner)
+        public void Create(CleanerViewModel cleaner)
         {
-            repo.Create(cleaner);
+            var cvm = mapper.Map<Cleaner>(cleaner);
+            repo.CreateAsync(cvm);
         }
-        void ICleanerService.Update(Cleaner cleaner)
+        public void Update(int userPermissionCode, CleanerViewModel cleaner)
         {
-            repo.Update(cleaner);
+            var cvm = mapper.Map<Cleaner>(cleaner);
+            repo.Update(userPermissionCode, cvm);
         }
     }
 }

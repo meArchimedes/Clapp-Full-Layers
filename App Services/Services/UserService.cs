@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Common;
 using DAL_Repositories.Repositories;
-using Repositories.Models;
+using DAL_Repositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace App_Services.Services
 {
     public class UserService : IUserService
     {
+        public static int AccessPermission = 0;
         IUserRepository repo;
         IMapper mapper;
         public UserService(IUserRepository repo, IMapper mapper)
@@ -19,32 +20,31 @@ namespace App_Services.Services
             this.repo = repo;
             this.mapper = mapper;
         }
-
-        public void Create(User user)
-        {
-            repo.Create(user);
-        }
-
-        public bool Delete(User user)
-        {
-            return repo.Delete(user.Id);
-        }
-
-        public User GetById(int id)
-        {
-            return repo.GetById(id);
-        }
-
         public List<UserViewModel> GetList()
         {
             List<User> users = repo.GetAll();
             List<UserViewModel> UserVM = mapper.Map<List<UserViewModel>>(users);
             return UserVM;
         }
-
-        public void Update(User user)
+        public UserViewModel GetById(int id)
         {
-            repo.Update(user);
+            User user = repo.GetById(id);
+            UserViewModel userViewModel = mapper.Map<UserViewModel>(user);
+            return userViewModel;
+        }
+        public bool Delete(int permissionCode, int userId)
+        {
+            return repo.Delete(permissionCode, userId);
+        }
+        public void Create(UserViewModel user)
+        {
+            var uvm = mapper.Map<User>(user);
+            repo.CreateAsync(uvm);
+        }
+        public void Update(int userPermissionCode, UserViewModel user)
+        {
+            var uvm = mapper.Map<User>(user);
+            repo.Update(userPermissionCode, uvm);
         }
     }
 }

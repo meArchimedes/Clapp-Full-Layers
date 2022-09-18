@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Repositories.Models
+namespace DAL_Repositories.Models
 {
-    public partial class Housekeeper:User
+    public partial class Housekeeper
     {
-        public int UserId { get; set; }
-        public int? PaymentMethodId { get; set; }
         public int Id { get; set; }
 
-        public virtual PaymentMethod? PaymentMethod { get; set; }
-        public virtual User User { get; set; } = null!;
+        public virtual User IdNavigation { get; set; } = null!;
     }
 }

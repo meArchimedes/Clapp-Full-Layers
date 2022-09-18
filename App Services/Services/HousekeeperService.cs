@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Common;
+using DAL_Repositories.Models;
 using Repositories;
-using Repositories.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +19,34 @@ namespace App_Services.Services
         public HousekeeperService(IHousekeeperRepository repo, IMapper mapper)
         {
             this.repo = repo;
-            mapper = mapper;
+            this.mapper = mapper;
         }
         public List<HousekeeperViewModel> GetList()
         {
-            List<Housekeeper> hks = repo.GetAll();
-            List<HousekeeperViewModel> HVM = mapper.Map<List<HousekeeperViewModel>>(hks);
-            return HVM;
+            List<Housekeeper> housekeepers = repo.GetAll();
+            List<HousekeeperViewModel> HousekeeperVM = mapper.Map<List<HousekeeperViewModel>>(housekeepers);
+            return HousekeeperVM;
         }
-        public Housekeeper GetById(int id)
+        public HousekeeperViewModel GetById(int id)
         {
-            return repo.GetById(id);
+            Housekeeper housekeeper = repo.GetById(id);
+            HousekeeperViewModel housekeeperViewModel = mapper.Map<HousekeeperViewModel>(housekeeper);
+            return housekeeperViewModel;
         }
-        public bool Delete(Housekeeper housekeeper)
+        public bool Delete(int permissionCode, int housekeeperId)
         {
-            return repo.Delete(housekeeper.Id);
+            return repo.Delete(permissionCode, housekeeperId);
         }
-        public void Create(Housekeeper housekeeper)
+        public void Create(HousekeeperViewModel housekeeper)
         {
-            repo.Create(housekeeper);
+            var hvm = mapper.Map<Housekeeper>(housekeeper);
+            repo.CreateAsync(hvm);
         }
-        public void Update(Housekeeper housekeeper)
+        public void Update(int userPermissionCode, HousekeeperViewModel housekeeper)
         {
-            repo.Update(housekeeper);
+            var hvm = mapper.Map<Housekeeper>(housekeeper);
+            repo.Update(userPermissionCode, hvm);
         }
     }
 }
+

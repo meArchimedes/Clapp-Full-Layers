@@ -1,31 +1,30 @@
 ﻿using App_Services.Services;
 using AutoMapper;
 using Common;
-using DAL_Repositories.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CleanerController:ControllerBase
+    public class HousekeeperController:BaseController
     {
+       
         public readonly IMapper _mapper;
-        ICleanerService service;
-        public CleanerController(ICleanerService service)
+        IHousekeeperService service;
+        public HousekeeperController(IHousekeeperService service)
         {
             this.service = service;
         }
 
         [HttpGet]
-        public ActionResult<List<CleanerViewModel>> GetAll()
+        public ActionResult<List<HousekeeperViewModel>> GetAll()
         {
             return service.GetList();
         }
 
         [HttpGet("GetById")]
-        public ActionResult<CleanerViewModel> GetById(int id)
+        public ActionResult<HousekeeperViewModel> GetById(int id)
         {
             return service.GetById(id);
         }
@@ -37,15 +36,15 @@ namespace Web_API.Controllers
         }
 
         [HttpPost("create")]
-        public void Create(CleanerViewModel cleanerViewModel)
+        public void Create(HousekeeperViewModel HousekeeperViewModel)
         {
-            service.Create(cleanerViewModel);
+            service.Create(HousekeeperViewModel);
         }
 
         [HttpPut("update")]
-        public void Put(int PermissionCode, CleanerViewModel cleanerViewModel)
+        public void Put(int PermissionCode, HousekeeperViewModel HousekeeperViewModel)
         {
-            service.Update(PermissionCode, cleanerViewModel);
+            service.Update(PermissionCode, HousekeeperViewModel);
         }
     }
 }

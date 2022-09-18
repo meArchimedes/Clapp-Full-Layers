@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Repositories.Models
+namespace DAL_Repositories.Models
 {
     public partial class Address
     {
         public Address()
         {
-            Users = new HashSet<User>();
+            AddressUsers = new HashSet<AddressUser>();
         }
 
         public int AddressId { get; set; }
@@ -17,9 +17,7 @@ namespace Repositories.Models
         public string? AddressLine2 { get; set; }
         public string Zip { get; set; } = null!;
         public string? State { get; set; }
-        public int UserId { get; set; }
 
-        public virtual User User { get; set; } = null!;
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<AddressUser> AddressUsers { get; set; }
     }
 }

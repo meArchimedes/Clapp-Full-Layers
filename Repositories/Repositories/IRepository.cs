@@ -1,4 +1,4 @@
-﻿using Repositories.Models;
+﻿using DAL_Repositories.Models;
 
 namespace Repositories
 {
@@ -7,7 +7,9 @@ namespace Repositories
         List<T> GetAll();
         T GetById(int id);
         void Create(T objToCreate);
-        void Update(T objToUpdate);
-        bool Delete(int id);
+        Task CreateAsync(T objToCreate);
+        void Update(int permissionCode, T objToUpdate);
+        bool Delete(int permissionCode, int id);
+        bool DeleteAll(T typeToDelete);
     }
 }

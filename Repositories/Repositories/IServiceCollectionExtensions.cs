@@ -1,7 +1,9 @@
-﻿using DAL_Repositories.Repositories;
+﻿using DAL_Repositories;
+using DAL_Repositories.Models;
+using DAL_Repositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Repositories.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,8 @@ namespace Repositories
     {
         public static void AddRepositories(this IServiceCollection ServiceCollection)
         {
+            ServiceCollection.AddScoped<IUserRepository, UserRepository>();
+            ServiceCollection.AddScoped<IAddressRepository, AddressRepository>();
             ServiceCollection.AddScoped<ICleanerRepository, CleanerRepository>();
             ServiceCollection.AddScoped<IHousekeeperRepository, HousekeeperRepository>();
             ServiceCollection.AddDbContext<ClappContext>();

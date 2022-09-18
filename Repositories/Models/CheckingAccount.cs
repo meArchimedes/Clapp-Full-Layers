@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Repositories.Models
+namespace DAL_Repositories.Models
 {
     public partial class CheckingAccount
     {

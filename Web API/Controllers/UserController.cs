@@ -1,31 +1,29 @@
 ﻿using App_Services.Services;
 using AutoMapper;
 using Common;
-using DAL_Repositories.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CleanerController:ControllerBase
+    public class UserController:BaseController
     {
         public readonly IMapper _mapper;
-        ICleanerService service;
-        public CleanerController(ICleanerService service)
+        IUserService service;
+        public UserController(IUserService service)
         {
             this.service = service;
         }
 
         [HttpGet]
-        public ActionResult<List<CleanerViewModel>> GetAll()
+        public ActionResult<List<UserViewModel>> GetAll()
         {
             return service.GetList();
         }
 
         [HttpGet("GetById")]
-        public ActionResult<CleanerViewModel> GetById(int id)
+        public ActionResult<UserViewModel> GetById(int id)
         {
             return service.GetById(id);
         }
@@ -37,15 +35,16 @@ namespace Web_API.Controllers
         }
 
         [HttpPost("create")]
-        public void Create(CleanerViewModel cleanerViewModel)
+        public void Create(UserViewModel userViewModel)
         {
-            service.Create(cleanerViewModel);
+            service.Create(userViewModel);
         }
 
         [HttpPut("update")]
-        public void Put(int PermissionCode, CleanerViewModel cleanerViewModel)
+        public void Put(int PermissionCode, UserViewModel userViewModel)
         {
-            service.Update(PermissionCode, cleanerViewModel);
+            service.Update(PermissionCode, userViewModel);
         }
     }
 }
+

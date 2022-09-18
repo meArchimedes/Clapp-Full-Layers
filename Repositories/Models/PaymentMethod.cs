@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Repositories.Models
+namespace DAL_Repositories.Models
 {
     public partial class PaymentMethod
     {
         public PaymentMethod()
         {
-            Housekeepers = new HashSet<Housekeeper>();
+            Users = new HashSet<User>();
         }
 
         public int PaymentMethodId { get; set; }
@@ -19,6 +19,6 @@ namespace Repositories.Models
         public virtual CreditCard? CreditCard { get; set; }
         public virtual GooglePay? GooglePay { get; set; }
         public virtual PayPal? PayPal { get; set; }
-        public virtual ICollection<Housekeeper> Housekeepers { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }
